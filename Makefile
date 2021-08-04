@@ -5,3 +5,6 @@ install:
 format:
 	@black main.py
 	@black ./src
+
+run: format
+	@python main.py
