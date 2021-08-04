@@ -3,4 +3,5 @@ install:
 	@poetry install
 
 format:
+	@black main.py
 	@black ./src
