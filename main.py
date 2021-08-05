@@ -1,5 +1,6 @@
 from src.algorithms.simple_ea import SimpleEA
-from src.utils.sine import Sine
+import soundfile as sf
+import glob
 
 ALPHA = 0.5
 INDV_SIZE = 1024
@@ -8,9 +9,10 @@ FIT = 0.2
 
 def main() -> None:
     target = []
-    for i in range(5):
-        sine = Sine.generate_wave(i * 100, INDV_SIZE)
-        target.append(sine)
+
+    for file in glob.glob("files/*.flac"):
+        waveform, _ = sf.read(file)
+        target.append(waveform)
 
     simple_ea = SimpleEA(INDV_SIZE, FIT, ALPHA)
 
