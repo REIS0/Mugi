@@ -64,7 +64,7 @@ class SimpleEA:
                 else:
                     indv[j] = mutated
 
-    def run(self, target: np.array, fit_type="best") -> None:
+    def run(self, target: np.array) -> None:
         """
         Run the algorithm.
         """
