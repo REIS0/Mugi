@@ -1,12 +1,16 @@
 from typing import Union
-from numpy.random import default_rng
+
 import numpy as np
+from numpy.random import default_rng
+
+from src.algorithms.model_ea import ModelEA
 
 
-class SimpleEA:
-    def __init__(self, size: int, fit_thresh: float, alpha=0.5) -> None:
+class SimpleEA(ModelEA):
+    def __init__(self, target: np.array, fit_thresh: float, alpha=0.5) -> None:
         self.set_alpha(alpha)
-        self.__size = size
+        self.__target = target
+        self.__size = len(target)
         self.__fit_thresh = fit_thresh
 
     def set_alpha(self, alpha: float) -> None:
@@ -26,12 +30,12 @@ class SimpleEA:
             population[i] = indv
         return population
 
-    def __evaluate(self, population: np.array, target: np.array) -> list:
+    def __evaluate(self, population: np.array) -> list:
         evaluation = []
         for array in population:
             fit = 0
             for j in range(self.__size):
-                fit += target[j] - array[j]
+                fit += self.__target[j] - array[j]
             evaluation.append((array, abs(fit)))
         return evaluation
 
@@ -64,16 +68,15 @@ class SimpleEA:
                 else:
                     indv[j] = mutated
 
-    def run(self, target: np.array) -> None:
-        """
-        Run the algorithm.
-        """
+    def run(self) -> Union[float, np.array]:
         population = self.__generate_population()
-        evaluation = self.__evaluate(population, target)
+        evaluation = self.__evaluate(population)
 
         fit, index = self.__best_fit(evaluation)
-        generation = 0
-        print(f"Fitness: {fit}; Generation: {generation}")
+        # generation = 0
+        # print(f"Fitness: {fit}; Generation: {generation}")
+
+        best_fit = (fit, evaluation[index][0])
 
         while fit > self.__fit_thresh:
             parent1 = (0, 99)
@@ -86,8 +89,12 @@ class SimpleEA:
 
             new_pop = self.__recombine(parent1[0], parent2[0])
             self.__mutate(new_pop)
-            evaluation = self.__evaluate(new_pop, target)
+            evaluation = self.__evaluate(new_pop)
             fit, index = self.__best_fit(evaluation)
 
-            generation += 1
-            print(f"Fitness: {fit}; Index: {index}; Generation: {generation}")
+            if fit < best_fit[0]:
+                best_fit = (fit, evaluation[index][0])
+
+            # generation += 1
+            # print(f"Fitness: {fit}; Index: {index}; Generation: {generation}")
+        return best_fit
