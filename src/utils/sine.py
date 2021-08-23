@@ -2,14 +2,16 @@ import numpy as np
 
 
 class Sine:
-    def generate_wave(freq: float, samplerate: int) -> np.array:
+    def generate_wave(freq: float, size: int, samplerate=44100) -> np.array:
         """
-        Generate a 1s sinewave according to the samplerate and frequency.
+        Generate a sinewave according to the frequency, number
+        of samples and samplerate.
+        Samplerate is 44100 by default.
         """
         t_sample = 1 / samplerate
         time = 0
-        wave = np.empty(samplerate, dtype=float)
-        for t in range(samplerate):
+        wave = np.empty(size, dtype=float)
+        for t in range(size):
             wave[t] = np.sin(np.pi * 2 * time * freq)
             time += t_sample
         return wave
