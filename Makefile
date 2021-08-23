@@ -8,5 +8,5 @@ format:
 	@black ./src
 	@isort ./src
 
-run: format
-	@python main.py
+# run: format
+# 	@python main.py
