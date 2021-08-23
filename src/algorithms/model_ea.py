@@ -4,33 +4,39 @@ import numpy as np
 
 
 class ModelEA:
-    def __init__(self, target: np.array, fit_thresh: float) -> None:
+    def __init__(self, target: np.array, iterations: int) -> None:
         """
         Receive the target waveform and the fitness value.
         """
-        raise NotImplemented
+        self._size = len(target)
+        self._target = target
+        self._iterations = iterations
 
-    def __generate_population(self) -> np.array:
-        raise NotImplemented
+    def _generate_population(self) -> np.array:
+        raise NotImplementedError
 
-    def __evaluate(self, population: np.array, target: np.array) -> list:
-        raise NotImplemented
+    def _evaluate(self, population: np.array, target: np.array) -> list:
+        raise NotImplementedError
 
-    def __best_fit(self, array: list) -> Union[float, float]:
-        raise NotImplemented
+    def _best_fit(self, array: list) -> Union[float, float]:
+        raise NotImplementedError
 
-    def __recombine(self, parent1: np.array, parent2: np.array) -> np.array:
-        raise NotImplemented
+    def _recombine(self, parent1: np.array, parent2: np.array) -> np.array:
+        raise NotImplementedError
 
-    def __mutate(self, population: np.array) -> None:
-        raise NotImplemented
+    def _mutate(self, population: np.array) -> None:
+        raise NotImplementedError
 
     def set_target(self, target: np.array) -> None:
-        self.__target = target
+        self._target = target
+        self._size = len(target)
+
+    def set_iterations(self, iterations: int) -> None:
+        self._iterations = iterations
 
     def run(self) -> Union[float, np.array]:
         """
         Run the algorithm. Return a tuple with the fitness and
         the data.
         """
-        raise NotImplemented
+        raise NotImplementedError

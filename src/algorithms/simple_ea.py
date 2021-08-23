@@ -7,11 +7,9 @@ from src.algorithms.model_ea import ModelEA
 
 
 class SimpleEA(ModelEA):
-    def __init__(self, target: np.array, fit_thresh: float, alpha=0.5) -> None:
+    def __init__(self, target: np.array, iterations: int, alpha=0.5) -> None:
         self.set_alpha(alpha)
-        self.__target = target
-        self.__size = len(target)
-        self.__fit_thresh = fit_thresh
+        super().__init__(target, iterations)
 
     def set_alpha(self, alpha: float) -> None:
         """
@@ -22,24 +20,24 @@ class SimpleEA(ModelEA):
             raise ValueError("Alpha nao esta entre 1 e 0")
         self.__alpha = alpha
 
-    def __generate_population(self) -> np.array:
+    def _generate_population(self) -> np.array:
         pop_size = 10
-        population = np.empty((pop_size, self.__size))
+        population = np.empty((pop_size, self._size))
         for i in range(pop_size):
-            indv = default_rng().uniform(-1.0, 1.0, self.__size)
+            indv = default_rng().uniform(-1.0, 1.0, self._size)
             population[i] = indv
         return population
 
-    def __evaluate(self, population: np.array) -> list:
+    def _evaluate(self, population: np.array) -> list:
         evaluation = []
         for array in population:
             fit = 0
-            for j in range(self.__size):
-                fit += self.__target[j] - array[j]
+            for j in range(self._size):
+                fit += self._target[j] - array[j]
             evaluation.append((array, abs(fit)))
         return evaluation
 
-    def __best_fit(self, array: list) -> Union[float, float]:
+    def _best_fit(self, array: list) -> Union[float, float]:
         best = 99
         index = None
         for i in range(len(array)):
@@ -48,18 +46,20 @@ class SimpleEA(ModelEA):
                 index = i
         return best, index
 
-    def __recombine(self, parent1: np.array, parent2: np.array) -> np.array:
+    def _recombine(self, parent1: np.array, parent2: np.array) -> np.array:
         pop_size = 10
-        population = np.empty((pop_size, self.__size))
+        population = np.empty((pop_size, self._size))
         for i in range(pop_size):
-            p_perc = int(default_rng().uniform(0.0, 1.0) * self.__size)
-            population[i] = np.concatenate((parent1[p_perc:], parent2[:p_perc]))
+            p_perc = int(default_rng().uniform(0.0, 1.0) * self._size)
+            population[i] = np.concatenate(
+                (parent1[p_perc:], parent2[:p_perc])
+            )
         return population
 
-    def __mutate(self, population: np.array) -> None:
+    def _mutate(self, population: np.array) -> None:
         for indv in population:
-            mutation = default_rng().uniform(-1.0, 1.0, self.__size)
-            for j in range(self.__size):
+            mutation = default_rng().uniform(-1.0, 1.0, self._size)
+            for j in range(self._size):
                 mutated = indv[j] + self.__alpha * mutation[j]
                 if mutated > 1.0:
                     indv[j] = 1.0
@@ -69,16 +69,14 @@ class SimpleEA(ModelEA):
                     indv[j] = mutated
 
     def run(self) -> Union[float, np.array]:
-        population = self.__generate_population()
-        evaluation = self.__evaluate(population)
+        population = self._generate_population()
+        evaluation = self._evaluate(population)
 
-        fit, index = self.__best_fit(evaluation)
-        # generation = 0
-        # print(f"Fitness: {fit}; Generation: {generation}")
+        fit, index = self._best_fit(evaluation)
 
         best_fit = (fit, evaluation[index][0])
 
-        while fit > self.__fit_thresh:
+        for _ in range(self._iterations):
             parent1 = (0, 99)
             parent2 = (0, 99)
             for i in evaluation:
@@ -87,14 +85,12 @@ class SimpleEA(ModelEA):
                 elif i[1] < parent2[1]:
                     parent2 = i
 
-            new_pop = self.__recombine(parent1[0], parent2[0])
-            self.__mutate(new_pop)
-            evaluation = self.__evaluate(new_pop)
-            fit, index = self.__best_fit(evaluation)
+            new_pop = self._recombine(parent1[0], parent2[0])
+            self._mutate(new_pop)
+            evaluation = self._evaluate(new_pop)
+            fit, index = self._best_fit(evaluation)
 
             if fit < best_fit[0]:
                 best_fit = (fit, evaluation[index][0])
 
-            # generation += 1
-            # print(f"Fitness: {fit}; Index: {index}; Generation: {generation}")
         return best_fit
