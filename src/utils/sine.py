@@ -2,7 +2,7 @@ import numpy as np
 
 
 class Sine:
-    def generate_wave(freq: float, size: int, samplerate=44100) -> np.array:
+    def generate_wave(freq: float, size: int, samplerate=44100) -> np.ndarray:
         """
         Generate a sinewave according to the frequency, number
         of samples and samplerate.

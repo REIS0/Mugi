@@ -7,9 +7,9 @@ from src.algorithms.model_ea import ModelEA
 
 
 class SimpleEA(ModelEA):
-    def __init__(self, target: np.array, iterations: int, alpha=0.5) -> None:
+    def __init__(self, target: np.ndarray, pop_size: int, iterations: int, alpha=0.5) -> None:
         self.set_alpha(alpha)
-        super().__init__(target, iterations)
+        super().__init__(target, pop_size, iterations)
 
     def set_alpha(self, alpha: float) -> None:
         """
@@ -20,15 +20,14 @@ class SimpleEA(ModelEA):
             raise ValueError("Alpha nao esta entre 1 e 0")
         self.__alpha = alpha
 
-    def _generate_population(self) -> np.array:
-        pop_size = 10
-        population = np.empty((pop_size, self._size))
-        for i in range(pop_size):
+    def _generate_population(self) -> np.ndarray:
+        population = np.empty((self._pop_size, self._size))
+        for i in range(self._pop_size):
             indv = default_rng().uniform(-1.0, 1.0, self._size)
             population[i] = indv
         return population
 
-    def _evaluate(self, population: np.array) -> list:
+    def _evaluate(self, population: np.ndarray) -> list:
         evaluation = []
         for array in population:
             fit = 0
@@ -46,7 +45,7 @@ class SimpleEA(ModelEA):
                 index = i
         return best, index
 
-    def _recombine(self, parent1: np.array, parent2: np.array) -> np.array:
+    def _recombine(self, parent1: np.ndarray, parent2: np.ndarray) -> np.ndarray:
         pop_size = 10
         population = np.empty((pop_size, self._size))
         for i in range(pop_size):
@@ -56,7 +55,7 @@ class SimpleEA(ModelEA):
             )
         return population
 
-    def _mutate(self, population: np.array) -> None:
+    def _mutate(self, population: np.ndarray) -> None:
         for indv in population:
             mutation = default_rng().uniform(-1.0, 1.0, self._size)
             for j in range(self._size):
@@ -68,7 +67,7 @@ class SimpleEA(ModelEA):
                 else:
                     indv[j] = mutated
 
-    def run(self) -> Union[float, np.array]:
+    def run(self) -> Union[float, np.ndarray]:
         population = self._generate_population()
         evaluation = self._evaluate(population)
 
