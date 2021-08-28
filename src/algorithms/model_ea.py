@@ -5,15 +5,22 @@ import numpy as np
 
 class ModelEA:
     def __init__(
-        self, target: np.ndarray, pop_size: int, iterations: int
+        self, target: np.ndarray, pop_size: int, fit=None, iterations=None
     ) -> None:
         """
-        Receive the target waveform and the fitness value.
+        Receive the target waveform.
+        Is needed to set a fitness value or a max iteration (which is equal
+        to the generation) value.
         """
         self._size = len(target)
         self._target = target
-        self._iterations = iterations
         self._pop_size = pop_size
+        if not fit and not iterations:
+            raise TypeError(
+                "Missing fitness and iterations value. Please assign one of them."
+            )
+        self._fit = fit
+        self._iterations = iterations
 
     def _generate_population(self) -> np.ndarray:
         raise NotImplementedError
@@ -38,6 +45,9 @@ class ModelEA:
 
     def set_iterations(self, iterations: int) -> None:
         self._iterations = iterations
+
+    def set_fit(self, fit: float) -> None:
+        self._fit = fit
 
     def run(self) -> Union[float, np.ndarray]:
         """

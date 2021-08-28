@@ -8,10 +8,19 @@ from src.algorithms.model_ea import ModelEA
 
 class SimpleEA(ModelEA):
     def __init__(
-        self, target: np.ndarray, pop_size: int, iterations: int, alpha=0.5
+        self,
+        target: np.ndarray,
+        pop_size: int,
+        fit: float,
+        alpha=0.5,
+        iterations=None,
     ) -> None:
+        """
+        Fitness is calculated by the difference between the sum
+        of the elements.
+        """
         self.set_alpha(alpha)
-        super().__init__(target, pop_size, iterations)
+        super().__init__(target, pop_size, fit, iterations=iterations)
 
     def set_alpha(self, alpha: float) -> None:
         """
@@ -72,6 +81,7 @@ class SimpleEA(ModelEA):
                     indv[j] = mutated
 
     def run(self) -> Union[float, np.ndarray]:
+        gen = 1
         population = self._generate_population()
         evaluation = self._evaluate(population)
 
@@ -79,7 +89,10 @@ class SimpleEA(ModelEA):
 
         best_fit = (fit, evaluation[index][0])
 
-        for _ in range(self._iterations):
+        while True:
+            gen += 1
+            if self._iterations and gen > self._iterations:
+                break
             parent1 = (0, 99)
             parent2 = (0, 99)
             for i in evaluation:
@@ -95,5 +108,8 @@ class SimpleEA(ModelEA):
 
             if fit < best_fit[0]:
                 best_fit = (fit, evaluation[index][0])
+
+            if self._fit and best_fit[0] <= self._fit:
+                break
 
         return best_fit
