@@ -4,7 +4,9 @@ import numpy as np
 
 
 class ModelEA:
-    def __init__(self, target: np.ndarray, pop_size: int, iterations: int) -> None:
+    def __init__(
+        self, target: np.ndarray, pop_size: int, iterations: int
+    ) -> None:
         """
         Receive the target waveform and the fitness value.
         """
@@ -22,7 +24,9 @@ class ModelEA:
     def _best_fit(self, array: list) -> Union[float, float]:
         raise NotImplementedError
 
-    def _recombine(self, parent1: np.ndarray, parent2: np.ndarray) -> np.ndarray:
+    def _recombine(
+        self, parent1: np.ndarray, parent2: np.ndarray
+    ) -> np.ndarray:
         raise NotImplementedError
 
     def _mutate(self, population: np.ndarray) -> None:

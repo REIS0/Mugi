@@ -7,7 +7,9 @@ from src.algorithms.model_ea import ModelEA
 
 
 class SimpleEA(ModelEA):
-    def __init__(self, target: np.ndarray, pop_size: int, iterations: int, alpha=0.5) -> None:
+    def __init__(
+        self, target: np.ndarray, pop_size: int, iterations: int, alpha=0.5
+    ) -> None:
         self.set_alpha(alpha)
         super().__init__(target, pop_size, iterations)
 
@@ -45,7 +47,9 @@ class SimpleEA(ModelEA):
                 index = i
         return best, index
 
-    def _recombine(self, parent1: np.ndarray, parent2: np.ndarray) -> np.ndarray:
+    def _recombine(
+        self, parent1: np.ndarray, parent2: np.ndarray
+    ) -> np.ndarray:
         pop_size = 10
         population = np.empty((pop_size, self._size))
         for i in range(pop_size):
