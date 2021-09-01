@@ -52,7 +52,9 @@ class EuclideanEA(ModelEA):
         "best" is the index for the best generated waveform,
         "population" is the population itself.
         """
-        new_population = np.empty((self._pop_size, self._size), dtype=np.float_)
+        new_population = np.empty(
+            (self._pop_size, self._size), dtype=np.float_
+        )
         for i in range(self._pop_size):
             # Simple Arithmetic Recombination
             new_population[i] = population[best]
@@ -63,19 +65,21 @@ class EuclideanEA(ModelEA):
             k2 = default_rng().integers(k1, self._size)
             for j in range(k1, k2 + 1):
                 new_population[i][j] = (
-                    ALPHA * population[i][j] + (1 - ALPHA) * new_population[i][j]
+                    ALPHA * population[i][j]
+                    + (1 - ALPHA) * new_population[i][j]
                 )
         return new_population
 
     def _mutate(self, population: np.ndarray) -> None:
         """
-        Mutation occur by generating a random value "prob" between 0 and 1.
-        The "beta" is made by a random value between 1 and 1 minus "prob".
+        Generate a random value "b" between 0 and 1, then generating a
+        "beta" made by a random values between 1 minus "b" and 1. Apply
+        the noise multiplied by "beta" to the individual in the population.
         """
         # Uniform mutation
-        prob = default_rng().random(self._size)
+        b = default_rng().random(self._size)
         for i in range(self._pop_size):
-            beta = default_rng().uniform(1 - prob, 1)
+            beta = default_rng().uniform(1 - b, 1, self._size)
             noise = default_rng().uniform(-1.0, 1.0, self._size)
             population[i] += beta * noise
             population[i] = np.where(population[i] > 1, population[i], 1)
