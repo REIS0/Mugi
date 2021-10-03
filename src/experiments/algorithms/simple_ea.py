@@ -56,16 +56,12 @@ class SimpleEA(ModelEA):
                 index = i
         return best, index
 
-    def _recombine(
-        self, parent1: np.ndarray, parent2: np.ndarray
-    ) -> np.ndarray:
+    def _recombine(self, parent1: np.ndarray, parent2: np.ndarray) -> np.ndarray:
         pop_size = 10
         population = np.empty((pop_size, self._size))
         for i in range(pop_size):
             p_perc = int(default_rng().uniform(0.0, 1.0) * self._size)
-            population[i] = np.concatenate(
-                (parent1[p_perc:], parent2[:p_perc])
-            )
+            population[i] = np.concatenate((parent1[p_perc:], parent2[:p_perc]))
         return population
 
     def _mutate(self, population: np.ndarray) -> None:

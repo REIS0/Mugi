@@ -1,7 +1,6 @@
 import numpy as np
 import numpy.linalg as LA
 from deap import base, creator, tools
-
 # !! temp
 from icecream import ic
 from numpy.random import default_rng

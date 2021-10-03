@@ -63,7 +63,10 @@ class EuclideanEA(ModelEA):
             k2 = default_rng().integers(k1, self._size) + 1
             new_ind[k1 : k2 + 1] = (
                 ALPHA
-                * (np.hamming(population[i][k1 : k2 + 1].shape[0]) * population[i][k1 : k2 + 1])
+                * (
+                    np.hamming(population[i][k1 : k2 + 1].shape[0])
+                    * population[i][k1 : k2 + 1]
+                )
             ) + ((1 - ALPHA) * population[best][k1 : k2 + 1])
             # ic(new_ind)
             new_pop[i] = new_ind
@@ -80,17 +83,11 @@ class EuclideanEA(ModelEA):
         # Copy the population
         new = np.copy(population)
         for i in range(self._pop_size):
-            # ic(i)
-            # ic(new[i])
             beta = default_rng().uniform(1 - b, 1 + b, self._size)
-            # ic(beta)
             new[i] = new[i] * beta
-            # ic(new[i])
             # ** elementos em que a condicao for falsa serao trocados **
             new[i] = np.where(new[i] < 1, new[i], 1)
-            # ic(new[i])
             new[i] = np.where(new[i] > -1, new[i], -1)
-            # ic(new[i])
         return new
 
     def run(self, verbose=False) -> tuple[np.float_, np.ndarray]:
@@ -116,16 +113,9 @@ class EuclideanEA(ModelEA):
             if self._fit and best_fit[0] <= self._fit:
                 break
 
-            # ic(gen)
-            # ic(population)
-            # ic('crossover')
             population = self._recombine(index, population)
-            # ic(population)
-            # ic('mutacao')
             population = self._mutate(population)
-            # ic(population)
             evaluation = self._evaluate(population)
-            # ic(evaluation)
             fit, index = self._best_fit(evaluation)
 
             if verbose:

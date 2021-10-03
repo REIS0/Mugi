@@ -31,9 +31,7 @@ class ModelEA:
     def _best_fit(self, array: list) -> Union[float, float]:
         raise NotImplementedError
 
-    def _recombine(
-        self, parent1: np.ndarray, parent2: np.ndarray
-    ) -> np.ndarray:
+    def _recombine(self, parent1: np.ndarray, parent2: np.ndarray) -> np.ndarray:
         raise NotImplementedError
 
     def _mutate(self, population: np.ndarray) -> None:
