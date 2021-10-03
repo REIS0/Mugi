@@ -61,13 +61,10 @@ class EuclideanEA(ModelEA):
                 self._size,
             )
             k2 = default_rng().integers(k1, self._size) + 1
-            # ic(k1)
-            # ic(k2)
-            # ic(population[i])
-            # ic(new_ind)
-            new_ind[k1 : k2 + 1] = (ALPHA * population[i][k1 : k2 + 1]) + (
-                (1 - ALPHA) * population[best][k1 : k2 + 1]
-            )
+            new_ind[k1 : k2 + 1] = (
+                ALPHA
+                * (np.hamming(population[i][k1 : k2 + 1].shape[0]) * population[i][k1 : k2 + 1])
+            ) + ((1 - ALPHA) * population[best][k1 : k2 + 1])
             # ic(new_ind)
             new_pop[i] = new_ind
         return new_pop
