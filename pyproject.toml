@@ -9,10 +9,13 @@ license = "Mozilla Public License 2.0"
 python = "^3.7"
 numpy = "^1.21.1"
 SoundFile = "^0.10.3"
+matplotlib = "^3.4.3"
+ipykernel = "^6.4.1"
 
 [tool.poetry.dev-dependencies]
 isort = "^5.9.3"
 black = "^21.7b0"
+icecream = "^2.1.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
