@@ -1,6 +1,6 @@
-# Evolutionary Sound Synthesis
+# Mugi
 
-Sound synthesis using evolutionary algorithms.
+Generating sound data using evolutionary algorithms.
 
 ## Running Jupyter Notebooks
 
